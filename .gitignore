@@ -1,3 +1,2 @@
 # Ignore all contents inside any data_in and data_out folders
-**/data_in/**
-**/data_out/**
+**/data/**
