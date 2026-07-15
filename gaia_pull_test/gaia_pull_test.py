@@ -7,7 +7,7 @@ from astroquery.gaia import Gaia
 
 
 # Quickly test pull from Gaia database only 5 lines
-# should take less than 10 mins and validates pathways
+# should take less than 10 mins (usually ~ 1 min) and validates pathways
 PARALLAX_MIN_MAS = 5.0
 ROW_LIMIT = 5
 MAX_RETRIES = 8
