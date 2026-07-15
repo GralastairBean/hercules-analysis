@@ -29,7 +29,7 @@ def main() -> None:
 
     if "h_group" not in classified_df.columns or "z_height_pc" not in classified_df.columns:
         raise ValueError(
-            "The classified CSV does not contain the expected columns. Run the data-pull script first."
+            "The classified CSV does not contain the expected columns. Run the processing script first."
         )
 
     h1_df = classified_df[classified_df["h_group"] == "H1"].copy()
