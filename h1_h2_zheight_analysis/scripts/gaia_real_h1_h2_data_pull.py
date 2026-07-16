@@ -10,12 +10,11 @@ from astroquery.gaia import Gaia
 # end-to-end pipeline can be validated quickly before expanding the sample.
 # timing: 100k=40 min, 200k=2hrs...
 PARALLAX_MIN_MAS = 5.0
-ROW_LIMIT = 800000
 MAX_RETRIES = 8
 RETRY_BASE_SECONDS = 60
 
 QUERY = """
-    SELECT TOP {row_limit}
+    SELECT
         source_id,
         ra,
         dec,
@@ -80,11 +79,11 @@ def main() -> None:
     log(
         (
             "Submitting Gaia DR3 proof-of-concept query for "
-            f"up to {ROW_LIMIT:,} sources with parallax >= {PARALLAX_MIN_MAS:.3f} mas..."
+            f"all sources with parallax >= {PARALLAX_MIN_MAS:.3f} mas..."
         ),
         started_at,
     )
-    query = QUERY.format(parallax_min_mas=PARALLAX_MIN_MAS, row_limit=ROW_LIMIT)
+    query = QUERY.format(parallax_min_mas=PARALLAX_MIN_MAS)
     table = run_query_with_retries(query=query, started_at=started_at)
     df = table.to_pandas()
     log(f"Loaded {len(df):,} rows.", started_at)
