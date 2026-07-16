@@ -10,7 +10,6 @@ import pandas as pd
 RAW_CSV_NAME = "gaia_real_h1_h2_raw.csv"
 CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
 
-MAX_DISTANCE_PC = 1000.0
 RUWE_MAX = 1.4
 H1_V_MIN = -55.0
 H1_V_MAX = -43.0
@@ -75,8 +74,8 @@ def main() -> None:
     log("Computing Galactocentric velocities and z heights...", started_at)
     df = add_galactocentric_columns(df)
 
-    log(f"Applying quality cuts: distance <= {MAX_DISTANCE_PC:.0f} pc and ruwe < {RUWE_MAX:.1f}...", started_at)
-    quality_filter = (df["distance_pc"] <= MAX_DISTANCE_PC) & (df["ruwe"] < RUWE_MAX)
+    log(f"Applying quality cut: ruwe < {RUWE_MAX:.1f}...", started_at)
+    quality_filter = df["ruwe"] < RUWE_MAX
     clean_df = df[quality_filter].copy()
     log(f"Quality-cut sample contains {len(clean_df):,} stars.", started_at)
 
