@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import datetime
 from time import perf_counter, sleep
@@ -12,6 +13,8 @@ PARALLAX_OVER_ERROR_MIN = 10  # Keep only stars with <= 10% parallax error
 RADIAL_VELOCITY_ERROR_MAX = 5.0  # Keep only stars with absolute radial-velocity error <= 5 km/s
 MAX_RETRIES = 8
 RETRY_BASE_SECONDS = 60
+GAIA_USERNAME_ENV = "GAIA_USERNAME"
+GAIA_PASSWORD_ENV = "GAIA_PASSWORD"
 
 QUERY = """
     SELECT
@@ -69,8 +72,22 @@ def run_query_with_retries(query: str, started_at: float):
             sleep(backoff_seconds)
 
 
+def login_to_gaia(started_at: float) -> None:
+    username = os.getenv(GAIA_USERNAME_ENV)
+    password = os.getenv(GAIA_PASSWORD_ENV)
+    if not username or not password:
+        raise RuntimeError(
+            f"Missing Gaia credentials. Set {GAIA_USERNAME_ENV} and {GAIA_PASSWORD_ENV} environment variables."
+        )
+
+    log("Logging in to Gaia TAP using configured account...", started_at)
+    Gaia.login(user=username, password=password)
+    log("Gaia login successful.", started_at)
+
+
 def main() -> None:
     started_at = perf_counter()
+    login_to_gaia(started_at)
     project_root = Path(__file__).resolve().parents[1]
     data_dir = project_root / "data"
     data_dir.mkdir(exist_ok=True)
