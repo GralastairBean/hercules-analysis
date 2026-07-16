@@ -9,7 +9,7 @@ from astroquery.gaia import Gaia
 # Proof-of-concept pull settings. Keep this intentionally small so the
 # end-to-end pipeline can be validated quickly before expanding the sample.
 # timing: 100k=40 min, 200k=2hrs...
-PARALLAX_MIN_MAS = 5.0
+PARALLAX_MIN_MAS = 1.0  # Parallax = 1.0 sets search radius to d = 1 kpc
 MAX_RETRIES = 8
 RETRY_BASE_SECONDS = 60
 
