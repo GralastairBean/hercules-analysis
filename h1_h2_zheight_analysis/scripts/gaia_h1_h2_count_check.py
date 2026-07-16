@@ -4,7 +4,10 @@ from time import perf_counter, sleep
 from astroquery.gaia import Gaia
 
 
+# QUERY FILTERS
 PARALLAX_MIN_MAS = 1.0  # Parallax = 1.0 sets search radius to d = 1 kpc
+PARALLAX_OVER_ERROR_MIN = 10  # Keep only stars with <= 10% parallax error
+RADIAL_VELOCITY_ERROR_MAX = 5.0  # Keep only stars with absolute radial-velocity error <= 5 km/s
 MAX_RETRIES = 8
 RETRY_BASE_SECONDS = 60
 
@@ -17,16 +20,18 @@ QUERY = """
         pmra,
         pmdec,
         radial_velocity,
+        radial_velocity_error,
         ruwe,
         phot_g_mean_mag,
         phot_bp_mean_mag,
         phot_rp_mean_mag
     FROM gaiadr3.gaia_source
     WHERE parallax IS NOT NULL
-        AND parallax_over_error >= 10
+        AND parallax_over_error >= {parallax_over_error_min}
         AND pmra IS NOT NULL
         AND pmdec IS NOT NULL
-        AND radial_velocity IS NOT NULL
+        AND radial_velocity_error IS NOT NULL
+        AND radial_velocity_error <= {radial_velocity_error_max}
         AND phot_g_mean_mag IS NOT NULL
         AND phot_bp_mean_mag IS NOT NULL
         AND phot_rp_mean_mag IS NOT NULL
@@ -67,7 +72,11 @@ def main() -> None:
     count_query = f"""
     SELECT COUNT(*) AS n_matches
     FROM (
-{QUERY.format(parallax_min_mas=PARALLAX_MIN_MAS).strip()}
+{QUERY.format(
+    parallax_min_mas=PARALLAX_MIN_MAS,
+    parallax_over_error_min=PARALLAX_OVER_ERROR_MIN,
+    radial_velocity_error_max=RADIAL_VELOCITY_ERROR_MAX,
+).strip()}
     ) AS q
     """
 
