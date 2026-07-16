@@ -23,7 +23,6 @@ QUERY = """
         phot_rp_mean_mag
     FROM gaiadr3.gaia_source
     WHERE parallax IS NOT NULL
-        AND parallax > 0
         AND parallax_over_error >= 10
         AND pmra IS NOT NULL
         AND pmdec IS NOT NULL
