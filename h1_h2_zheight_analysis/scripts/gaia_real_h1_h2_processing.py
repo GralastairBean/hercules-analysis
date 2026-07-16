@@ -10,8 +10,8 @@ import pandas as pd
 RAW_CSV_NAME = "gaia_real_h1_h2_raw.csv"
 CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
 
-RUWE_MAX = 1.4      # Quality cut (decide on this later)
-H1_V_MIN = -55.0
+RUWE_MAX = 1.4      # Quality cut: common value 1.4, this is a indication of astrometry quality, higher = worse
+H1_V_MIN = -55.00
 H1_V_MAX = -43.0
 H2_V_MIN = -43.0
 H2_V_MAX = -30.0
