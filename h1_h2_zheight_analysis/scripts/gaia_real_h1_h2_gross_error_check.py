@@ -3,6 +3,7 @@ from datetime import datetime
 from time import perf_counter
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 
@@ -29,7 +30,7 @@ def main() -> None:
     df = pd.read_csv(classified_csv)
     log(f"Loaded {len(df):,} rows.", started_at)
 
-    required_columns = {"z_height_pc"}
+    required_columns = {"z_height_pc", "vr_kms", "lz_kpc_kms"}
     missing_columns = required_columns.difference(df.columns)
     if missing_columns:
         missing_text = ", ".join(sorted(missing_columns))
@@ -45,12 +46,14 @@ def main() -> None:
             )
         df["distance_pc"] = 1000.0 / df["parallax"]
 
-    plot_df = df.dropna(subset=["distance_pc", "z_height_pc"]).copy()
+    plot_df = df.dropna(subset=["distance_pc", "z_height_pc", "vr_kms", "lz_kpc_kms"]).copy()
     if plot_df.empty:
-        raise ValueError("No rows with both distance_pc and z_height_pc were found.")
+        raise ValueError("No rows with distance_pc, z_height_pc, vr_kms, and lz_kpc_kms were found.")
 
-    log("Creating gross error check histograms (distance and z height)...", started_at)
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    log("Creating gross error check histograms (distance, z height, Vr, and Lz)...", started_at)
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    ax1, ax2 = axes[0]
+    ax3, ax4 = axes[1]
 
     ax1.hist(
         plot_df["distance_pc"],
@@ -76,6 +79,36 @@ def main() -> None:
     ax2.set_ylabel("Star count", fontsize=11)
     ax2.grid(True, linestyle="--", alpha=0.25)
 
+    vr_low = float(np.percentile(plot_df["vr_kms"], 0.5))
+    vr_high = float(np.percentile(plot_df["vr_kms"], 99.5))
+    ax3.hist(
+        plot_df["vr_kms"],
+        bins=180,
+        range=(vr_low, vr_high),
+        color="black",
+        alpha=0.85,
+    )
+    ax3.set_xlim(vr_low, vr_high)
+    ax3.set_title("Vr Distribution", fontsize=12, pad=10)
+    ax3.set_xlabel("Vr (km/s)", fontsize=11)
+    ax3.set_ylabel("Star count", fontsize=11)
+    ax3.grid(True, linestyle="--", alpha=0.25)
+
+    lz_low = float(np.percentile(plot_df["lz_kpc_kms"], 0.5))
+    lz_high = float(np.percentile(plot_df["lz_kpc_kms"], 99.5))
+    ax4.hist(
+        plot_df["lz_kpc_kms"],
+        bins=180,
+        range=(lz_low, lz_high),
+        color="black",
+        alpha=0.85,
+    )
+    ax4.set_xlim(lz_low, lz_high)
+    ax4.set_title("Lz Distribution", fontsize=12, pad=10)
+    ax4.set_xlabel("Lz (kpc km/s)", fontsize=11)
+    ax4.set_ylabel("Star count", fontsize=11)
+    ax4.grid(True, linestyle="--", alpha=0.25)
+
     fig.text(
         0.98,
         0.965,
@@ -86,7 +119,7 @@ def main() -> None:
         color="black",
     )
 
-    plt.suptitle("Gross Error Check: Distance and Z Height Histograms", fontsize=14, y=0.995)
+    plt.suptitle("Gross Error Check: Distance, Z Height, Vr, and Lz Histograms", fontsize=14, y=0.995)
 
     plt.tight_layout(rect=(0, 0, 1, 0.96))
 
