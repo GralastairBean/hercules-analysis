@@ -56,7 +56,7 @@ def main() -> None:
     lz_high = float(plot_df["lz_kpc_kms"].quantile(0.995))
     ax.hist(
         plot_df["lz_kpc_kms"],
-        bins=180,
+        bins=250,
         range=(lz_low, lz_high),
         color="black",
         alpha=0.85,
