@@ -9,6 +9,7 @@ import pandas as pd
 
 CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
 OUTPUT_PLOT_NAME = "gaia_real_h1_h2_velocity_discovery.png"
+OUTPUT_PDF_NAME = "gaia_real_h1_h2_velocity_discovery.pdf"
 
 # Reference kinematics used for marker overlay (literature-style conventions).
 R0_KPC = 8.2
@@ -31,6 +32,7 @@ def main() -> None:
 
     classified_csv = data_dir / CLASSIFIED_CSV_NAME
     output_plot = data_dir / OUTPUT_PLOT_NAME
+    output_pdf = data_dir / OUTPUT_PDF_NAME
 
     log(f"Loading classified sample from {classified_csv}...", started_at)
     df = pd.read_csv(classified_csv)
@@ -137,6 +139,8 @@ def main() -> None:
 
     log(f"Saving velocity discovery plot to {output_plot}...", started_at)
     plt.savefig(output_plot, dpi=300)
+    log(f"Saving velocity discovery plot to {output_pdf}...", started_at)
+    plt.savefig(output_pdf)
     plt.show()
 
     log("Finished Hercules velocity discovery plot.", started_at)
