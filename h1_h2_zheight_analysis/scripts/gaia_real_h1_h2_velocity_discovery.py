@@ -70,7 +70,7 @@ def main() -> None:
     mesh = ax.hist2d(
         velocity_df["vr_kms"],
         velocity_df["lz_kpc_kms"],
-        bins=120,
+        bins=150,
         range=[full_vr_range, full_lz_range],
         cmap="cividis",
     )

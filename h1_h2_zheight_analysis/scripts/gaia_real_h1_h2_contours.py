@@ -68,7 +68,7 @@ def main() -> None:
     sun_vr_kms = -U_SUN_PEC_KMS
     sun_lz_kpc_kms = R0_KPC * (VCIRC_LSR_KMS + V_SUN_PEC_KMS)
 
-    bins = 140
+    bins = 150
     hist = ax.hist2d(
         velocity_df["vr_kms"],
         velocity_df["lz_kpc_kms"],
