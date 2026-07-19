@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 
 
-CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
-OUTPUT_PLOT_NAME = "gaia_real_h1_h2_hr_diagrams.png"
+CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
+OUTPUT_PLOT_NAME = "analysis_HR_comparison.png"
 
 PARALLAX_MIN_MAS = 0.1
 
@@ -119,7 +119,7 @@ def main() -> None:
     classified_csv = data_dir / CLASSIFIED_CSV_NAME
     output_plot = data_dir / OUTPUT_PLOT_NAME
 
-    log("Starting Gaia Hercules HR analysis.", started_at)
+    log("Starting Hercules HR analysis.", started_at)
     log(f"Loading classified sample from {classified_csv}...", started_at)
     df = pd.read_csv(classified_csv)
     log(f"Loaded {len(df):,} classified stars.", started_at)
@@ -133,9 +133,6 @@ def main() -> None:
     log(f"H1 stars used in HR diagram: {len(h1_df):,}", started_at)
     log(f"H2 stars used in HR diagram: {len(h2_df):,}", started_at)
     log(f"Other stars used in HR diagram: {len(other_df):,}", started_at)
-
-    if h1_df.empty and h2_df.empty and other_df.empty:
-        raise ValueError("No stars with valid HR values were found.")
 
     log("Creating three-panel HR diagrams (H1, H2, Other)...", started_at)
     x_lo = float(hr_df["bp_rp_color"].min())
@@ -176,13 +173,13 @@ def main() -> None:
         cbar = fig.colorbar(hbs[0], ax=[ax1, ax2, ax3], pad=0.015, fraction=0.03)
         cbar.set_label("Hexbin density (log10 count)", fontsize=9)
 
-    fig.suptitle("Hercules H1/H2/Other Hertzsprung-Russell Diagrams", fontsize=15, fontweight="bold")
+    fig.suptitle("Hercules H1/H2/Other HR Diagrams (not corrected for extinction)", fontsize=15, fontweight="bold")
 
     log(f"Saving HR diagram figure to {output_plot}...", started_at)
     plt.savefig(output_plot, dpi=300)
     plt.show()
 
-    log("Finished Gaia Hercules HR analysis.", started_at)
+    log("Finished.", started_at)
 
 
 if __name__ == "__main__":
