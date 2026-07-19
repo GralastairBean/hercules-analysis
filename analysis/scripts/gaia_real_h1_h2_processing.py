@@ -7,8 +7,8 @@ import astropy.units as u
 import pandas as pd
 
 
-RAW_CSV_NAME = "gaia_real_h1_h2_raw.csv"
-CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
+RAW_CSV_NAME = "gaia_data_pull_raw.csv"
+CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
 
 RUWE_MAX = 1.4      # Quality cut: common value 1.4, this is a indication of astrometry quality, higher = worse
 H1_V_MIN = -55.00
@@ -66,7 +66,7 @@ def main() -> None:
     raw_csv = data_dir / RAW_CSV_NAME
     classified_csv = data_dir / CLASSIFIED_CSV_NAME
 
-    log("Starting Gaia Hercules processing step.", started_at)
+    log("Starting processing...", started_at)
     log(f"Loading raw Gaia sample from {raw_csv}...", started_at)
     df = pd.read_csv(raw_csv)
     log(f"Loaded {len(df):,} raw rows.", started_at)
@@ -86,9 +86,9 @@ def main() -> None:
     h1_df = clean_df[h1_filter].copy()
     h2_df = clean_df[h2_filter].copy()
 
-    log(f"Isolated {len(h1_df):,} Hercules 1 stars.", started_at)
-    log(f"Isolated {len(h2_df):,} Hercules 2 stars.", started_at)
-    log(f"Removed {len(clean_df) - len(h1_df) - len(h2_df):,} non-member stars.", started_at)
+    log(f"Classified {len(h1_df):,} Hercules 1 stars.", started_at)
+    log(f"Classified {len(h2_df):,} Hercules 2 stars.", started_at)
+    log(f"Classified {len(clean_df) - len(h1_df) - len(h2_df):,} non-member stars.", started_at)
 
     classified_df = clean_df.copy()
     classified_df["h_group"] = "Other"
@@ -98,7 +98,7 @@ def main() -> None:
     log(f"Saving classified sample to {classified_csv}...", started_at)
     classified_df.to_csv(classified_csv, index=False)
 
-    log("Finished Gaia Hercules processing step.", started_at)
+    log("Finished data processing.", started_at)
 
 
 if __name__ == "__main__":
