@@ -44,8 +44,9 @@ def main() -> None:
     log("Creating Lz histogram...", started_at)
     fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
 
-    lz_low = float(plot_df["lz_kpc_kms"].quantile(0.005))
-    lz_high = float(plot_df["lz_kpc_kms"].quantile(0.995))
+    # Set x-axis bounds (large outliers make plot impossible to read if all included)
+    lz_low = 1000    
+    lz_high = 2500
     ax.hist(
         plot_df["lz_kpc_kms"],
         bins=250,
