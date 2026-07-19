@@ -57,6 +57,31 @@ def add_galactocentric_columns(df: pd.DataFrame) -> pd.DataFrame:
     return enriched
 
 
+def log_group_min_max(group_df: pd.DataFrame, group_name: str, started_at: float) -> None:
+    if group_df.empty:
+        log(f"{group_name}: no stars available for min-max summary.", started_at)
+        return
+
+    lz_min = float(group_df["lz_kpc_kms"].min())
+    lz_max = float(group_df["lz_kpc_kms"].max())
+    vr_min = float(group_df["vr_kms"].min())
+    vr_max = float(group_df["vr_kms"].max())
+    distance_min = float(group_df["distance_pc"].min())
+    distance_max = float(group_df["distance_pc"].max())
+    z_height_min = float(group_df["z_height_pc"].min())
+    z_height_max = float(group_df["z_height_pc"].max())
+    log(
+        (
+            f"{group_name} ranges -> "
+            f"Lz [{lz_min:.2f}, {lz_max:.2f}] kpc km/s, "
+            f"Vr [{vr_min:.2f}, {vr_max:.2f}] km/s, "
+            f"distance [{distance_min:.2f}, {distance_max:.2f}] pc, "
+            f"z-height [{z_height_min:.2f}, {z_height_max:.2f}] pc"
+        ),
+        started_at,
+    )
+
+
 def main() -> None:
     started_at = perf_counter()
     project_root = Path(__file__).resolve().parents[1]
@@ -85,10 +110,15 @@ def main() -> None:
 
     h1_df = clean_df[h1_filter].copy()
     h2_df = clean_df[h2_filter].copy()
+    other_df = clean_df[~(h1_filter | h2_filter)].copy()
 
     log(f"Classified {len(h1_df):,} Hercules 1 stars.", started_at)
     log(f"Classified {len(h2_df):,} Hercules 2 stars.", started_at)
-    log(f"Classified {len(clean_df) - len(h1_df) - len(h2_df):,} non-member stars.", started_at)
+    log(f"Classified {len(other_df):,} non-member stars.", started_at)
+
+    log_group_min_max(h1_df, "H1", started_at)
+    log_group_min_max(h2_df, "H2", started_at)
+    log_group_min_max(other_df, "Other", started_at)
 
     classified_df = clean_df.copy()
     classified_df["h_group"] = "Other"
