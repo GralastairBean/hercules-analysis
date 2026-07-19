@@ -74,7 +74,7 @@ def main() -> None:
         range=[full_vr_range, full_lz_range],
         cmap="cividis",
     )
-    ax.set_title("Full Sample Lz-Vr Map", fontsize=12, pad=10)
+    ax.set_title("Full Sample Lz-Vr Density Map", fontsize=12, pad=10)
     ax.set_xlabel("Vr (km/s)", fontsize=11)
     ax.set_ylabel("Lz (kpc km/s)", fontsize=11)
     ax.set_xlim(full_vr_range)
