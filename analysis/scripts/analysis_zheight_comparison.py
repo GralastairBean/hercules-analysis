@@ -19,11 +19,11 @@ def main() -> None:
     data_dir = project_root / "data"
     data_dir.mkdir(exist_ok=True)
 
-    classified_csv = data_dir / "gaia_real_h1_h2_classified.csv"
-    output_plot = data_dir / "gaia_real_h1_h2_comparison.png"
+    classified_csv = data_dir / "gaia_data_processed.csv"
+    output_plot = data_dir / "analysis_zheight_comparison.png"
 
-    log("Starting real Gaia Hercules z-height analysis.", started_at)
-    log(f"Loading classified Hercules sample from {classified_csv}...", started_at)
+    log("Starting z-height analysis.", started_at)
+    log(f"Loading classified sample from {classified_csv}...", started_at)
     classified_df = pd.read_csv(classified_csv)
     log(f"Loaded {len(classified_df):,} classified stars.", started_at)
 
@@ -36,9 +36,9 @@ def main() -> None:
     h2_df = classified_df[classified_df["h_group"] == "H2"].copy()
     other_df = classified_df[~classified_df["h_group"].isin(["H1", "H2"])].copy()
 
-    log(f"Isolated {len(h1_df):,} Hercules 1 stars from CSV.", started_at)
-    log(f"Isolated {len(h2_df):,} Hercules 2 stars from CSV.", started_at)
-    log(f"Isolated {len(other_df):,} Other stars from CSV.", started_at)
+    log(f"Extracted {len(h1_df):,} Hercules 1 stars from CSV.", started_at)
+    log(f"Extracted {len(h2_df):,} Hercules 2 stars from CSV.", started_at)
+    log(f"Extracted {len(other_df):,} Other stars from CSV.", started_at)
 
     plot_series = pd.concat(
         [h1_df["z_height_pc"], h2_df["z_height_pc"], other_df["z_height_pc"]],
@@ -143,7 +143,7 @@ def main() -> None:
     plt.savefig(output_plot, dpi=300)
     plt.show()
 
-    log("Finished real Gaia Hercules z-height analysis.", started_at)
+    log("Finished.", started_at)
 
 
 if __name__ == "__main__":
