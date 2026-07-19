@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
-OUTPUT_PNG_NAME = "gaia_real_h1_h2_velocity_discovery_histogram.png"
+CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
+OUTPUT_PNG_NAME = "hercules_discovery_histogram.png"
 
 
 def log(message: str, started_at: float) -> None:
@@ -41,7 +41,7 @@ def main() -> None:
     if plot_df.empty:
         raise ValueError("No rows with lz_kpc_kms were found in the classified CSV.")
 
-    log("Creating clean Lz histogram...", started_at)
+    log("Creating Lz histogram...", started_at)
     fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
 
     lz_low = float(plot_df["lz_kpc_kms"].quantile(0.005))
@@ -72,11 +72,11 @@ def main() -> None:
 
     plt.tight_layout()
 
-    log(f"Saving velocity discovery histogram to {output_png}...", started_at)
+    log(f"Saving histogram to {output_png}...", started_at)
     plt.savefig(output_png, dpi=300)
     plt.show()
 
-    log("Finished velocity discovery histogram.", started_at)
+    log("Finished.", started_at)
 
 
 if __name__ == "__main__":
