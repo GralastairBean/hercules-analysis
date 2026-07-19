@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 
 
-CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
-OUTPUT_PLOT_NAME = "gaia_real_h1_h2_contours.png"
+CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
+OUTPUT_PLOT_NAME = "hercules_discovery_plot_contours.png"
 
 # Reference kinematics used for marker overlay (literature-style conventions).
 R0_KPC = 8.2
@@ -16,8 +16,11 @@ VCIRC_LSR_KMS = 232.0
 U_SUN_PEC_KMS = 11.1
 V_SUN_PEC_KMS = 12.24
 
+# Set contour percentiles here.
 CONTOUR_PERCENTILES = [70, 78, 84, 90, 94, 97]
-CONTOUR_LINEWIDTH = 0.85
+# Set line width here.
+CONTOUR_LINEWIDTH = 0.85 
+# Set line opacity here.
 CONTOUR_ALPHA = 0.95
 
 
@@ -100,7 +103,7 @@ def main() -> None:
                 alpha=CONTOUR_ALPHA,
             )
 
-    ax.set_title("Lz-Vr Density with Contours", fontsize=12, pad=10)
+    ax.set_title("Full Sample Lz-Vr Density Map with Contours", fontsize=12, pad=10)
     ax.set_xlabel("Vr (km/s)", fontsize=11)
     ax.set_ylabel("Lz (kpc km/s)", fontsize=11)
     ax.scatter(
@@ -146,7 +149,6 @@ def main() -> None:
         bbox={"facecolor": "black", "alpha": 0.35, "edgecolor": "none", "pad": 4},
     )
 
-    plt.suptitle("Hercules Lz-Vr Structure with Contours", fontsize=14, y=0.995)
     plt.tight_layout(rect=(0, 0, 1, 0.96))
 
     log(f"Saving contour figure to {output_plot}...", started_at)
