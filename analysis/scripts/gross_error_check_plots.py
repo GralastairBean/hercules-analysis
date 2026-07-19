@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 
 
-CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
-OUTPUT_PNG_NAME = "gaia_real_h1_h2_gross_error_check_histograms.png"
+CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
+OUTPUT_PNG_NAME = "processed_gross_error_check_histograms.png"
 
 
 def log(message: str, started_at: float) -> None:
