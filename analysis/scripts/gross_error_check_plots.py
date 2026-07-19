@@ -79,8 +79,8 @@ def main() -> None:
     ax2.set_ylabel("Star count", fontsize=11)
     ax2.grid(True, linestyle="--", alpha=0.25)
 
-    vr_low = float(np.percentile(plot_df["vr_kms"], 0.5))
-    vr_high = float(np.percentile(plot_df["vr_kms"], 99.5))
+    vr_low = float(np.percentile(plot_df["vr_kms"], 0.2))
+    vr_high = float(np.percentile(plot_df["vr_kms"], 99.8))
     ax3.hist(
         plot_df["vr_kms"],
         bins=180,
@@ -95,7 +95,7 @@ def main() -> None:
     ax3.grid(True, linestyle="--", alpha=0.25)
 
     lz_low = float(np.percentile(plot_df["lz_kpc_kms"], 0.5))
-    lz_high = float(np.percentile(plot_df["lz_kpc_kms"], 99.5))
+    lz_high = float(np.percentile(plot_df["lz_kpc_kms"], 99.99))
     ax4.hist(
         plot_df["lz_kpc_kms"],
         bins=180,
