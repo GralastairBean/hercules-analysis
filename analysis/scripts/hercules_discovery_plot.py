@@ -7,9 +7,9 @@ import numpy as np
 import pandas as pd
 
 
-CLASSIFIED_CSV_NAME = "gaia_real_h1_h2_classified.csv"
-OUTPUT_PLOT_NAME = "gaia_real_h1_h2_velocity_discovery.png"
-OUTPUT_PDF_NAME = "gaia_real_h1_h2_velocity_discovery.pdf"
+CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
+OUTPUT_PLOT_NAME = "hercules_discovery_plot.png"
+OUTPUT_PDF_NAME = "hercules_discovery_plot.pdf"
 
 # Reference kinematics used for marker overlay (literature-style conventions).
 R0_KPC = 8.2
@@ -49,7 +49,7 @@ def main() -> None:
         raise ValueError("No stars with both Lz and Vr values were found in the classified CSV.")
     n_total = len(velocity_df)
 
-    log("Creating Hercules velocity discovery plot...", started_at)
+    log("Creating Hercules discovery plot...", started_at)
     fig, ax = plt.subplots(1, 1, figsize=(9, 7))
 
     lz_full_low = float(np.percentile(velocity_df["lz_kpc_kms"], 0.5))
@@ -74,7 +74,7 @@ def main() -> None:
         range=[full_vr_range, full_lz_range],
         cmap="cividis",
     )
-    ax.set_title("Parent Sample Lz-Vr Map", fontsize=12, pad=10)
+    ax.set_title("Full Sample Lz-Vr Map", fontsize=12, pad=10)
     ax.set_xlabel("Vr (km/s)", fontsize=11)
     ax.set_ylabel("Lz (kpc km/s)", fontsize=11)
     ax.set_xlim(full_vr_range)
@@ -143,7 +143,7 @@ def main() -> None:
     plt.savefig(output_pdf)
     plt.show()
 
-    log("Finished Hercules velocity discovery plot.", started_at)
+    log("Finished.", started_at)
 
 
 if __name__ == "__main__":
