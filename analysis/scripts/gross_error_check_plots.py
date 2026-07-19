@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# Set number of bins for all histograms
+NUM_BINS = 400
 
 CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
 OUTPUT_PNG_NAME = "processed_gross_error_check_histograms.png"
@@ -57,7 +59,7 @@ def main() -> None:
 
     ax1.hist(
         plot_df["distance_pc"],
-        bins=180,
+        bins=NUM_BINS,
         color="black",
         alpha=0.85,
     )
@@ -69,7 +71,7 @@ def main() -> None:
     z_limit = float(plot_df["distance_pc"].max())
     ax2.hist(
         plot_df["z_height_pc"],
-        bins=180,
+        bins=NUM_BINS,
         range=(-z_limit, z_limit),
         color="black",
         alpha=0.85,
@@ -83,7 +85,7 @@ def main() -> None:
     vr_high = float(np.percentile(plot_df["vr_kms"], 99.8))
     ax3.hist(
         plot_df["vr_kms"],
-        bins=180,
+        bins=NUM_BINS,
         range=(vr_low, vr_high),
         color="black",
         alpha=0.85,
@@ -98,7 +100,7 @@ def main() -> None:
     lz_high = float(np.percentile(plot_df["lz_kpc_kms"], 99.99))
     ax4.hist(
         plot_df["lz_kpc_kms"],
-        bins=180,
+        bins=NUM_BINS,
         range=(lz_low, lz_high),
         color="black",
         alpha=0.85,

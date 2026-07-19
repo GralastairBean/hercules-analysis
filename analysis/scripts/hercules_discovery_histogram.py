@@ -3,8 +3,11 @@ from datetime import datetime
 from time import perf_counter
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
+# Set number of bins
+NUM_BINS = 400
 
 CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
 OUTPUT_PNG_NAME = "hercules_discovery_histogram.png"
@@ -44,12 +47,11 @@ def main() -> None:
     log("Creating Lz histogram...", started_at)
     fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
 
-    # Set x-axis bounds (large outliers make plot impossible to read if all included)
-    lz_low = 1000    
-    lz_high = 2500
+    lz_low = float(np.percentile(plot_df["lz_kpc_kms"], 0.5))
+    lz_high = float(np.percentile(plot_df["lz_kpc_kms"], 99.99))
     ax.hist(
         plot_df["lz_kpc_kms"],
-        bins=250,
+        bins=NUM_BINS,
         range=(lz_low, lz_high),
         color="black",
         alpha=0.85,
