@@ -49,12 +49,18 @@ def plot_group_hr(
     group_name: str,
     x_limits: tuple[float, float],
     y_limits: tuple[float, float],
+    show_xlabel: bool = False,
+    show_ylabel: bool = False,
 ):
     if group_df.empty:
         ax.set_title(f"{group_name}: no valid stars", fontsize=12, pad=10)
-        ax.set_xlabel("Gaia BP-RP colour", fontsize=11)
-        ax.set_ylabel("Gaia G absolute magnitude", fontsize=11)
+        if show_xlabel:
+            ax.set_xlabel("Gaia BP-RP colour", fontsize=11)
+        if show_ylabel:
+            ax.set_ylabel("Gaia G absolute magnitude", fontsize=11)
         ax.grid(True, linestyle="--", alpha=0.3)
+        if not show_ylabel:
+            ax.set_ylabel("")
         return None
 
     ax.scatter(
@@ -74,14 +80,19 @@ def plot_group_hr(
         mincnt=1,
         bins="log",
         cmap="afmhot",
+        extent=(x_limits[0], x_limits[1], min(y_limits), max(y_limits)),
         linewidths=0,
         alpha=0.95,
         zorder=2,
     )
 
     ax.set_title(f"{group_name}", fontsize=12, pad=8, fontweight="bold")
-    ax.set_xlabel("Gaia BP-RP colour", fontsize=11)
-    ax.set_ylabel("Gaia G absolute magnitude", fontsize=11)
+    if show_xlabel:
+        ax.set_xlabel("Gaia BP-RP colour", fontsize=11)
+    if show_ylabel:
+        ax.set_ylabel("Gaia G absolute magnitude", fontsize=11)
+    else:
+        ax.set_ylabel("")
     ax.grid(False)
     ax.invert_yaxis()
     ax.set_xlim(*x_limits)
@@ -118,13 +129,15 @@ def main() -> None:
 
     h1_df = hr_df[hr_df["h_group"] == "H1"].copy()
     h2_df = hr_df[hr_df["h_group"] == "H2"].copy()
+    other_df = hr_df[~hr_df["h_group"].isin(["H1", "H2"])].copy()
     log(f"H1 stars used in HR diagram: {len(h1_df):,}", started_at)
     log(f"H2 stars used in HR diagram: {len(h2_df):,}", started_at)
+    log(f"Other stars used in HR diagram: {len(other_df):,}", started_at)
 
-    if h1_df.empty and h2_df.empty:
-        raise ValueError("No H1/H2 stars with valid HR values were found.")
+    if h1_df.empty and h2_df.empty and other_df.empty:
+        raise ValueError("No stars with valid HR values were found.")
 
-    log("Creating side-by-side HR diagrams...", started_at)
+    log("Creating three-panel HR diagrams (H1, H2, Other)...", started_at)
     x_lo = float(hr_df["bp_rp_color"].min())
     x_hi = float(hr_df["bp_rp_color"].max())
     y_lo = float(hr_df["abs_g_mag"].min())
@@ -134,20 +147,36 @@ def main() -> None:
     x_limits = (x_lo - 0.03 * x_span, x_hi + 0.03 * x_span)
     y_limits = (y_hi + 0.03 * y_span, y_lo - 0.03 * y_span)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7.5), sharex=True, sharey=True)
+    fig, (ax1, ax2, ax3) = plt.subplots(
+        1,
+        3,
+        figsize=(20, 7.5),
+        sharex=True,
+        sharey=True,
+        constrained_layout=True,
+    )
 
-    h1_hb = plot_group_hr(ax1, h1_df, "H1", x_limits, y_limits)
-    h2_hb = plot_group_hr(ax2, h2_df, "H2", x_limits, y_limits)
+    h1_hb = plot_group_hr(ax1, h1_df, "H1", x_limits, y_limits, show_xlabel=False, show_ylabel=True)
+    h2_hb = plot_group_hr(ax2, h2_df, "H2", x_limits, y_limits, show_xlabel=True, show_ylabel=False)
+    other_hb = plot_group_hr(ax3, other_df, "Other", x_limits, y_limits, show_xlabel=False, show_ylabel=False)
 
-    if h1_hb is not None:
-        cbar1 = fig.colorbar(h1_hb, ax=ax1, pad=0.01)
-        cbar1.set_label("Hexbin density (log10 count)", fontsize=9)
-    if h2_hb is not None:
-        cbar2 = fig.colorbar(h2_hb, ax=ax2, pad=0.01)
-        cbar2.set_label("Hexbin density (log10 count)", fontsize=9)
+    hbs = [hb for hb in (h1_hb, h2_hb, other_hb) if hb is not None]
+    if hbs:
+        shared_vmin = min(float(hb.get_array().min()) for hb in hbs)
+        shared_vmax = max(float(hb.get_array().max()) for hb in hbs)
 
-    plt.suptitle("Hercules H1/H2 Hertzsprung-Russell Diagrams", fontsize=15, y=0.99, fontweight="bold")
-    plt.tight_layout(rect=(0, 0, 1, 0.96))
+        # Hexbin uses log normalization here, so limits must stay strictly > 0.
+        shared_vmin = max(shared_vmin, 1e-12)
+        if shared_vmax <= shared_vmin:
+            shared_vmax = shared_vmin * 10.0
+
+        for hb in hbs:
+            hb.set_clim(shared_vmin, shared_vmax)
+
+        cbar = fig.colorbar(hbs[0], ax=[ax1, ax2, ax3], pad=0.015, fraction=0.03)
+        cbar.set_label("Hexbin density (log10 count)", fontsize=9)
+
+    fig.suptitle("Hercules H1/H2/Other Hertzsprung-Russell Diagrams", fontsize=15, fontweight="bold")
 
     log(f"Saving HR diagram figure to {output_plot}...", started_at)
     plt.savefig(output_plot, dpi=300)
