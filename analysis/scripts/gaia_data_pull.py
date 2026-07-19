@@ -92,12 +92,12 @@ def main() -> None:
     data_dir = project_root / "data"
     data_dir.mkdir(exist_ok=True)
 
-    raw_csv = data_dir / "gaia_real_h1_h2_raw.csv"
+    raw_csv = data_dir / "gaia_data_pull_raw.csv"
 
-    log("Starting proof-of-concept Gaia Hercules data pull.", started_at)
+    log("Starting data pull.", started_at)
     log(
         (
-            "Submitting Gaia DR3 proof-of-concept query for "
+            "Submitting query for "
             f"all sources with parallax >= {PARALLAX_MIN_MAS:.3f} mas..."
         ),
         started_at,
@@ -111,10 +111,10 @@ def main() -> None:
     df = table.to_pandas()
     log(f"Loaded {len(df):,} rows.", started_at)
 
-    log(f"Saving raw query results to {raw_csv}...", started_at)
+    log(f"Saving query results to {raw_csv}...", started_at)
     df.to_csv(raw_csv, index=False)
 
-    log("Finished proof-of-concept Gaia Hercules data pull.", started_at)
+    log("Finished data pull.", started_at)
 
 
 if __name__ == "__main__":
