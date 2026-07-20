@@ -13,14 +13,14 @@ The idea at the moment is...
 ## Pipeline
 ### Initial Setup: must be run in this order for pipeline to work...
 1. Log into your Gaia access account by setting username & password in a new python terminal
-2. Run scripts\gaia_count_query.py to see how many rows the data pull will get and to check log in and connection
-3. Run analysis\scripts\gaia_data_pull.py to pull the raw data into a csv analysis\data\gaia_data_pull_raw.csv
-4. Run analysis\scripts\data_processing_classify.py to transform motions/positions and catagorise raw data into H1, H2, other
-5. Run analysis\scripts\gross_error_check_plots.py and check processed data appears as expected.
+2. Run `scripts\gaia_count_query.py` to see how many rows the data pull will get and to check log in and connection
+3. Run `analysis\scripts\gaia_data_pull.py` to pull the raw data into a csv `analysis\data\gaia_data_pull_raw.csv`
+4. Run `analysis\scripts\data_processing_classify.py` to transform motions/positions and catagorise raw data into H1, H2, other. This is then saved as `analysis\data\gaia_data_processed.csv`
+5. Run `analysis\scripts\gross_error_check_plots.py` and check processed data appears as expected.
 
 ### You can now run any of the following in any order as they all point back to the processed csv...
-- analysis\scripts\hercules_discovery_plot.py = shows the H1,2 and 3 regions on a Lz vs Vr plot.
-- analysis\scripts\hercules_discovery_plot_contours.py =  as above but with percentile contours.
-- analysis\scripts\hercules_discovery_histogram.py shows Lz bumps for H1 and H2.
-- analysis\scripts\analysis_zheight_comparison.py = plot H1, H2 and other z-heights.
-- analysis\scripts\analysis_HR_comparison.py = plot H1, H2 and other HR diagrams. 
+- `analysis\scripts\hercules_discovery_plot.py` = shows the H1,2 and 3 regions on a Lz vs Vr plot.
+- `analysis\scripts\hercules_discovery_plot_contours.py` =  as above but with percentile contours.
+- `analysis\scripts\hercules_discovery_histogram.py` shows Lz bumps for H1 and H2.
+- `analysis\scripts\analysis_zheight_comparison.py` = plot H1, H2 and other z-heights.
+- `analysis\scripts\analysis_HR_comparison.py` = plot H1, H2 and other HR diagrams. 
