@@ -5,9 +5,10 @@ The idea at the moment is...
 1.  First find the various HMG in the raw data (2-3 groups?).
 2. Apply an appropriate filtering mechanism to accurately catagorise stars as H1, H2 or other.
 3. Make various comparisons between the HMG and the generic population to confirm their status as peturbed disc stars.
-3.1 Compare z-height
-3.2 Compare HR diagrams (shows different ages as y not c turn-off)
-3.3 Compare metallicity
+    1. Compare z-height
+    2. Compare HR diagrams (shows different ages as y not c turn-off)
+    3. Compare metallicity
+    4. and...?
 
 ## Pipeline
 ### Initial Setup: must be run in this order for pipeline to work...
