@@ -11,6 +11,10 @@ RAW_CSV_NAME = "gaia_data_pull_raw.csv"
 CLASSIFIED_CSV_NAME = "gaia_data_processed.csv"
 
 RUWE_MAX = 1.4      # Quality cut: common value 1.4, this is a indication of astrometry quality, higher = worse
+
+# Apply crude proof-of-concept H1/H2/other filtering based on V_local = y-velocity relative to the Sun.
+# H1: -55 < Vlocal < -43 km/s & H2: -43 < Vlocal < -30 km/s
+# Negative as recall the HMG stars are moving too slow, getting left behind by the Sun
 H1_V_MIN = -55.00
 H1_V_MAX = -43.0
 H2_V_MIN = -43.0
